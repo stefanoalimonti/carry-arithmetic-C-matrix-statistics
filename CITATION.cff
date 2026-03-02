@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Eigenvalue Statistics of Carry Companion Matrices: A Markov-Driven GOE↔GUE Transition in Sparse Non-Hermitian Ensembles"
+authors:
+  - family-names: Alimonti
+    given-names: Stefano
+    orcid: "https://orcid.org/0009-0009-1183-1698"
+    email: "stefalimonti@gmail.com"
+date-released: 2026-03-05
+repository-code: "https://github.com/stefanoalimonti/carry-arithmetic-C-matrix-statistics"
+keywords:
+  - random matrix theory
+  - carry sequences
+  - GOE-GUE transition
+  - Dyson index
+  - companion matrices
+  - effective rank
+  - Markov correlation
+license: MIT

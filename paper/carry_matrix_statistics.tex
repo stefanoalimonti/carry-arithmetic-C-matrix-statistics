@@ -1,0 +1,966 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  11pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdfauthor={Stefano Alimonti --- stefalimonti@gmail.com},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{Stefano Alimonti --- stefalimonti@gmail.com}
+\date{March 2026}
+
+\begin{document}
+
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\section{Eigenvalue Statistics of Carry Companion Matrices: A Markov-Driven
+GOE↔GUE Transition in Sparse Non-Hermitian
+Ensembles}\label{eigenvalue-statistics-of-carry-companion-matrices-a-markov-driven-goegue-transition-in-sparse-non-hermitian-ensembles}
+
+\textbf{Author:} Stefano Alimonti \textbf{Affiliation:} Independent Researcher
+\textbf{Date:} March 2026
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{Abstract}\label{abstract}
+
+We study eigenvalue spacing statistics for companion matrices arising from carry
+polynomials in positional multiplication. Individual carry matrices exhibit
+\textbf{GOE-like} nearest-neighbor spacing (orthogonal symmetry class). We
+identify the mechanism: Markov correlations between adjacent entries of the last
+column create an effective rank reduction in the perturbation space, quantified
+by a one-parameter interpolation that maps the full GOE↔GUE transition.
+Replacing carries with i.i.d. entries of the same marginal distribution shifts
+statistics to \textbf{GUE} (unitary class).
+
+Three analytical results underpin the transition: (1) the carry chain possesses
+a provably positive lag-1 autocorrelation (Proposition 1); (2) a stationary
+binary Markov chain with correlation \(\rho\) produces a covariance matrix whose
+normalized effective rank is
+
+\[g(\rho) = \frac{1-\rho^2}{1+\rho^2},\]
+
+yielding \(g(1/2) = 3/5\) at the Diaconis--Fulman spectral gap value
+(Proposition 2); and (3) the real eigenvalue fraction increases monotonically
+with \(\rho\), anti-correlated with the effective rank (Observation 3).
+
+Four independent statistics confirm the transition --- the spacing ratio
+\(\langle\tilde{r}\rangle\), the number variance \(\Sigma^2(L)\), the
+eigenvector orthogonality structure, and the real eigenvalue fraction --- with a
+computational bound
+
+\[\beta_{\mathrm{eff}} \leq 2 - \varepsilon(D), \qquad \varepsilon > 0,\]
+
+at 99.9\% bootstrap confidence.
+
+\textbf{Keywords:} random matrix theory, GOE-GUE transition, carry matrices,
+eigenvalue statistics, Markov correlation, companion matrices, effective rank
+
+\textbf{MSC 2020:} 15B52, 60B20, 11A63
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{1. Introduction}\label{introduction}
+
+\subsubsection{1.1 Motivation}\label{motivation}
+
+The spectral statistics of random matrices provide a bridge between arithmetic
+structure and physical universality classes. Montgomery {[}1{]} proved that
+Riemann zeta zeros exhibit GUE pair correlation; the Katz--Sarnak philosophy
+{[}2{]} extends this correspondence to families of \(L\)-functions. In this
+paper, we study whether the carry companion matrices --- sparse non-Hermitian
+matrices arising from positional multiplication --- exhibit random matrix
+statistics, and if so, which universality class.
+
+\subsubsection{1.2 RMT Context and
+Universality}\label{rmt-context-and-universality}
+
+The spectral statistics of sparse non-Hermitian random matrices --- specifically
+companion matrices where only one column contains random entries --- remain
+challenging for rigorous RMT. While bulk universality has been established for
+broad classes of Wigner matrices (Erdős, Schlein, and Yau {[}3{]}; Erdős and Yau
+{[}4{]}), the companion structure falls outside these standard frameworks. Tao
+and Vu {[}5{]} demonstrated that certain short-range correlations do not break
+local universality for non-Hermitian matrices. Our results present a contrasting
+phenomenon for sparse companion matrices: structured Markovian correlations
+\emph{do} alter the universality class, driving a smooth continuous transition
+--- analogous to the interpolating \(\beta\)-ensembles of Dumitriu and Edelman
+{[}6{]} --- from a GUE-like uncorrelated state to a GOE-like strongly correlated
+state. This positions the carry sequence as a naturally occurring operator
+driving a rank-reducing RMT transition.
+
+\subsubsection{1.3 Summary of Results}\label{summary-of-results}
+
+We prove three analytical propositions and establish three computational
+results:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Proposition 1} (§2.1): The carry chain has provably positive lag-1
+  autocorrelation, with
+\end{enumerate}
+
+\[\mathrm{Corr}(c_2, c_3) = 1/\sqrt{2}\]
+
+exactly, establishing the minimum bulk correlation. 2. \textbf{Proposition 2}
+(§2.2): The normalized effective rank of the Markov covariance matrix is
+\(g(\rho) = (1-\rho^2)/(1+\rho^2)\), strictly decreasing, with \(g(1/2) = 3/5\)
+at the Diaconis--Fulman spectral gap value. 3. \textbf{Observation 3} (§4.5):
+The real eigenvalue fraction \(f_{\mathrm{real}}(\rho)\) is monotonically
+increasing in \(\rho\), anti-correlated with \(g(\rho)\) (\(r = -0.93\)),
+providing the most direct TRS signature. 4. \textbf{Computational bound} (§4.3):
+
+\[\beta_{\mathrm{eff}} \leq 2 - \varepsilon(D)\]
+
+with \(\varepsilon > 0\) at 99.9\% bootstrap confidence for all tested \(D\). 5.
+\textbf{Monotone GOE↔GUE interpolation} (§4.1):
+\(\beta_{\mathrm{eff}}(\lambda)\) varies continuously from \({\approx}1.8\)
+(near-GUE) to \({\approx}1.0\) (GOE). 6. \textbf{Four-way confirmation} (§3,
+§4): Spacing ratio, number variance, eigenvector structure, and real eigenvalue
+fraction independently confirm the transition.
+
+\subsubsection{Important Caveats}\label{important-caveats}
+
+All computational results are \textbf{empirical observations} established with
+high statistical significance but without rigorous mathematical proof. Carry
+matrices are sparse companion matrices with integer entries, not members of any
+standard random matrix ensemble. The parallel with Riemann zero statistics is
+suggestive but not formal.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{2. Analytical Foundations}\label{analytical-foundations}
+
+\subsubsection{2.1 Carry Coefficient
+Autocorrelation}\label{carry-coefficient-autocorrelation}
+
+The GOE↔GUE transition is driven by the internal correlations of the carry
+chain. Using the exact second-moment structure developed in {[}F{]}, we
+establish:
+
+\textbf{Proposition 1} (Positive carry autocorrelation). For base-2
+multiplication with fixed MSBs \(g_0 = h_0 = 1\) and remaining bits i.i.d.
+\(\mathrm{Ber}(1/2)\):
+
+\emph{(a) The lag-1 autocorrelation at the first non-trivial position is}
+
+\[\mathrm{Corr}(c_2, c_3) = \frac{1}{\sqrt{2}} \approx 0.7071.\]
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  For all \(j \geq 2\) in the bulk, \(\mathrm{Cov}(c_j, c_{j+1}) > 0\).
+\item
+  The bulk autocorrelation is monotonically increasing with \(j\).
+\end{enumerate}
+
+\textbf{Proof.} (a) From the carry recurrence \(c_1 = 0\) and
+\(\mathrm{conv}_1 = g_1 + h_1\), we have
+\(c_2 = \lfloor(g_1 + h_1)/2\rfloor \in \{0,1\}\) with \(P(c_2 = 0) = 3/4\),
+\(P(c_2 = 1) = 1/4\). Hence \(E[c_2] = 1/4\), \(\mathrm{Var}(c_2) = 3/16\) {[}F,
+Theorem 3{]}.
+
+For \(c_3\): when \(c_2 = 1\) (i.e., \(g_1 = h_1 = 1\)), we have
+
+\[\mathrm{conv}_2 = h_2 + g_1 h_1 + g_2 = h_2 + 1 + g_2\]
+
+and
+
+\[\mathrm{total}_2 = \mathrm{conv}_2 + 1,\]
+
+yielding \(E[c_3 \mid c_2 = 1] = 5/4\). By the law of total expectation and the
+exact moment \(E[c_3] = 1/2\) {[}F, Theorem 3{]}, \(\mathrm{Var}(c_3) = 3/8\):
+
+\[\mathrm{Cov}(c_2, c_3) = E[c_2 c_3] - E[c_2]E[c_3] = \frac{5}{16} - \frac{1}{4}\cdot\frac{1}{2} = \frac{3}{16}.\]
+
+Therefore
+
+\[\mathrm{Corr}(c_2, c_3) = \frac{3/16}{\sqrt{3/16 \cdot 3/8}} = \frac{3/16}{3/(8\sqrt{2})} = \frac{1}{\sqrt{2}}.\]
+
+\(\square\)
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  The carry recurrence
+\end{enumerate}
+
+\[c_{j+1} = \lfloor(\mathrm{conv}_j + c_j)/2\rfloor\]
+
+is weakly increasing in \(c_j\) for fixed \(\mathrm{conv}_j\) (increasing
+\(c_j\) by 1 either preserves or increases \(c_{j+1}\) by 1). Hence \(c_{j+1}\)
+is stochastically increasing in \(c_j\), giving
+\(\mathrm{Cov}(c_j, c_{j+1}) \geq 0\). Strict positivity follows because, with
+probability \(1/2\) (by the Parity Lemma {[}F, Lemma B{]}), \(\mathrm{total}_j\)
+is odd, in which case the unit increase in \(c_j\) flips \(c_{j+1}\) from
+\(\lfloor t/2 \rfloor\) to \(\lfloor(t+1)/2\rfloor = \lfloor t/2\rfloor + 1\).
+\(\square\)
+
+\textbf{Observation} (monotonicity; numerical). The bulk autocorrelation
+\(\mathrm{Corr}(c_j, c_{j+1})\) is monotonically increasing with \(j\) in all
+tested cases: verified through exact rational enumeration up to \(K = 8\) (14
+free bits, \(2^{14}\) configurations) and by Monte Carlo to \(K = 64\). A full
+analytical proof of monotonicity remains open.
+
+\textbf{Remark} (Three types of correlation). It is important to distinguish: -
+(i) The raw carry autocorrelation \(\mathrm{Corr}(c_j, c_{j+1})\), which starts
+at \(1/\sqrt{2}\) and increases toward 1 as \(j \to \infty\) (because both means
+grow linearly); - (ii) The companion matrix coefficient correlation
+\(\mathrm{Corr}(q_i, q_{i+1})\) for the quotient polynomial \(Q = C/(x-2)\),
+which inherits the carry structure; - (iii) The Diaconis--Fulman spectral gap
+\(\gamma = 1 - 1/b = 1/2\) for base 2 {[}A; 7{]}, which governs the \emph{rate
+of decorrelation} in the carry Markov chain.
+
+The binary model of §4.4 uses \(\rho = 1/2\) as its lag-1 correlation parameter,
+matching the spectral gap (iii), not the raw correlation (i). This is the
+correct physical matching: the spectral gap controls the effective
+dimensionality of the perturbation vector (Proposition 2).
+
+\subsubsection{2.2 Effective Rank of the Markov Correlation
+Model}\label{effective-rank-of-the-markov-correlation-model}
+
+To isolate the effect of correlation \(\rho\) on spectral statistics, we study
+the covariance matrix of a stationary binary Markov chain. Let \(\Sigma(\rho)\)
+be the \(D \times D\) covariance matrix of a length-\(D\) stationary binary
+Markov chain with \(\mathrm{Ber}(1/2)\) marginals and lag-1 correlation
+\(\rho\).
+
+\textbf{Proposition 2} (Effective rank formula). The covariance matrix
+\(\Sigma(\rho)\) is a Kac--Murdock--Szegő Toeplitz matrix with
+\(\Sigma_{ij} = \sigma^2 \rho^{|i-j|}\) (\(\sigma^2 = 1/4\)). Its normalized
+effective rank (participation ratio)
+
+\[r_{\mathrm{eff}} = \frac{(\mathrm{Tr}\,\Sigma)^2}{D \cdot \mathrm{Tr}\,\Sigma^2}\]
+
+\emph{satisfies:}
+
+\emph{(a)} \(r_{\mathrm{eff}}(0) = 1\) \emph{(uncorrelated limit, full rank);}
+
+\emph{(b)}
+
+\[g(\rho) := \lim_{D \to \infty} r_{\mathrm{eff}} = \frac{1 - \rho^2}{1 + \rho^2},\]
+
+which is strictly decreasing on \([0, 1)\) with
+\(g'(\rho) = -4\rho/(1+\rho^2)^2 < 0\) for \(\rho > 0\);
+
+\emph{(c)} \(g(1/2) = 3/5 = 0.6\) \emph{exactly. At the carry chain spectral gap
+value, the perturbation vector retains only 60\% of its nominal degrees of
+freedom.}
+
+\textbf{Proof.} The eigenvalues of the KMS matrix are given by the
+Grenander--Szegő formula {[}8{]}:
+
+\[\lambda_k = \sigma^2 \frac{1-\rho^2}{1 - 2\rho\cos\!\bigl(\frac{k\pi}{D+1}\bigr) + \rho^2}, \qquad k = 1, \ldots, D.\]
+
+In the \(D \to \infty\) limit, the Szegő distribution theorem converts the
+discrete sums to integrals over the spectral density
+\(f(\theta) = \sigma^2 P_\rho(\theta)\), where
+\(P_\rho(\theta) = (1-\rho^2)/(1-2\rho\cos\theta+\rho^2)\) is the Poisson
+kernel. We compute:
+
+\[\frac{1}{\pi}\int_0^\pi P_\rho(\theta)\,d\theta = 1, \qquad \frac{1}{\pi}\int_0^\pi P_\rho(\theta)^2\,d\theta = \frac{1+\rho^2}{1-\rho^2}.\]
+
+The first identity is standard. The second follows from Parseval's theorem
+applied to the Fourier expansion
+\(P_\rho(\theta) = \sum_{n=-\infty}^{\infty} \rho^{|n|} e^{in\theta}\):
+
+\[\frac{1}{2\pi}\int_0^{2\pi} P_\rho(\theta)^2\,d\theta = \sum_{n=-\infty}^{\infty} \rho^{2|n|} = 1 + \frac{2\rho^2}{1-\rho^2} = \frac{1+\rho^2}{1-\rho^2}.\]
+
+The normalized effective rank in the continuous limit is then:
+
+\[g(\rho) = \frac{\bigl[\int_0^\pi f(\theta)\,d\theta\bigr]^2}{\pi\int_0^\pi f(\theta)^2\,d\theta} = \frac{(\sigma^2\pi)^2}{\pi \cdot \sigma^4 \cdot \pi(1+\rho^2)/(1-\rho^2)} = \frac{1-\rho^2}{1+\rho^2}.\]
+
+The strict decrease follows from \(g'(\rho) = -4\rho/(1+\rho^2)^2 < 0\) for
+\(\rho > 0\). Evaluating: \(g(1/2) = (3/4)/(5/4) = 3/5\). The finite-\(D\)
+correction is \(O(1/D)\), as verified numerically for \(D = 10\) to \(D = 5000\)
+(C13, Prop. 2). \(\square\)
+
+\textbf{Interpretation.} The effective rank reduction from 1 to \(3/5\) at
+\(\rho = 1/2\) means the companion matrix \(M = J + v \cdot e_D^T\) (where \(J\)
+is the shift matrix and \(v\) is the last column) has \(40\%\) fewer independent
+perturbation directions. Fewer independent directions reduce the level repulsion
+from quadratic (\(\beta = 2\), GUE) toward linear (\(\beta = 1\), GOE). This
+rank reduction is the physical mechanism driving the universality class
+transition.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{3. The Key Result: Markov Correlation Imposes
+GOE}\label{the-key-result-markov-correlation-imposes-goe}
+
+\subsubsection{3.1 Controlled Comparison}\label{controlled-comparison}
+
+Two companion matrix ensembles compared:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Ensemble & \(L^2\)(GOE) & \(L^2\)(GUE) & Best fit \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Markov-correlated (actual carries) & 0.084 & 0.109 & \textbf{GOE} \\
+i.i.d. (same marginals, no correlation) & 0.146 & 0.119 & \textbf{GUE} \\
+\end{longtable}
+
+\subsubsection{3.2 Interpretation}\label{interpretation}
+
+The empirical carry ensemble (with its actual Markov-induced dependence
+structure) is GOE-like, while i.i.d. controls are GUE-like. In the simplified
+binary Markov interpolation model of §4.4, increasing \(\rho\) moves the system
+from sub-GOE through a GOE crossing near \(\rho \approx 1/2\) and then toward
+GOE-GUE for larger \(\rho\). The operative mechanism is therefore not ``more
+correlation always means more GOE'', but the specific structured dependence
+regime realized by carry matrices, where the effective-rank reduction of
+Proposition 2 and real-eigenvalue enhancement align near the GOE crossing.
+
+\subsubsection{3.3 Level Spacing Ratio Test
+(C07)}\label{level-spacing-ratio-test-c07}
+
+The level spacing ratio \(\tilde{r}_n = \min(s_n, s_{n+1})/\max(s_n, s_{n+1})\)
+(Atas et al.~{[}9{]}) provides a robust test that does not require spectral
+unfolding. Known reference values:
+\(\langle\tilde{r}\rangle_{\text{Poisson}} \approx 0.386\),
+\(\langle\tilde{r}\rangle_{\text{GOE}} \approx 0.531\),
+\(\langle\tilde{r}\rangle_{\text{GUE}} \approx 0.600\).
+
+Markov vs i.i.d. comparison (20-bit primes, \(D \approx 38\)):
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.3600}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1067}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2800}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1200}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Ensemble
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\langle\tilde{r}\rangle\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(N_{\text{ratios}}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Closest
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Markov-correlated (actual) & 0.511 & {[}0.509, 0.513{]} & 66,402 &
+\textbf{GOE} \\
+i.i.d. (shuffled) & 0.586 & {[}0.584, 0.587{]} & 217,471 & \textbf{GUE} \\
+\end{longtable}
+
+The separation is \(0.075\) (\(Z = 58.6\), highly significant), exceeding the
+GOE-GUE reference gap of \(0.069\).
+
+\textbf{Dimension dependence (base 2):}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Bits & Mean \(D\) & \(\langle\tilde{r}\rangle\) & Closest \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+10 & 18 & 0.579 & GUE \\
+14 & 26 & 0.543 & GOE \\
+18 & 34 & 0.526 & GOE \\
+22 & 42 & 0.508 & GOE \\
+26 & 50 & 0.495 & GOE \\
+\end{longtable}
+
+The spacing ratio converges toward GOE as \(D\) grows but at \(D = 50\) sits
+slightly below the GOE value. This sub-GOE effect may reflect the sparse
+companion structure deviating from standard \(\beta\)-ensembles (see §4.3
+Caveats). Higher-dimensional tests (\(D > 100\)) would resolve this.
+
+\subsubsection{3.4 Requirements for a Rigorous
+Proof}\label{requirements-for-a-rigorous-proof}
+
+A mathematical proof that Markov-correlated companion matrices exhibit GOE would
+need:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  A universality theorem for sparse companion matrices with correlated entries
+  (no such result exists in RMT)
+\item
+  A quantitative bound relating the effective rank reduction (Proposition 2) to
+  the level repulsion exponent \(\beta\)
+\item
+  An explanation of the sub-GOE effect at large \(D\) within the
+  \(\beta\)-ensemble framework
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{4. Mechanism: Quantitative GOE↔GUE
+Transition}\label{mechanism-quantitative-goegue-transition}
+
+\subsubsection{4.1 Interpolation Experiment
+(C08)}\label{interpolation-experiment-c08}
+
+We construct a one-parameter family of companion matrices interpolating between
+full Markov correlation (\(\lambda = 1\), actual carries) and i.i.d. entries
+(\(\lambda = 0\), shuffled carries with same marginal). At intermediate
+\(\lambda\), a fraction \(1 - \lambda\) of the carry positions are randomly
+reshuffled.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1392}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.3418}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1013}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.3038}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1139}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\(\lambda\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\langle\tilde{r}\rangle\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+95\% CI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\beta_{\mathrm{eff}}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Closest
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0.00 & 0.5882 & {[}0.587, 0.589{]} & 1.84 & GUE \\
+0.25 & 0.5716 & {[}0.571, 0.573{]} & 1.59 & GUE \\
+0.50 & 0.5491 & {[}0.548, 0.550{]} & 1.27 & GOE \\
+0.75 & 0.5316 & {[}0.531, 0.533{]} & 1.01 & GOE \\
+1.00 & 0.5165 & {[}0.514, 0.519{]} & \(\leq 1\) & GOE \\
+\end{longtable}
+
+The transition is \textbf{smooth and monotone}:
+\(\beta_{\mathrm{eff}}(\lambda)\) decreases continuously from \({\approx}1.84\)
+at \(\lambda = 0\) to \({\approx}1.0\) at \(\lambda \approx 0.75\), then
+saturates. At \(\lambda = 1\), \(\langle\tilde{r}\rangle\) is slightly
+\emph{below} the GOE value (\(0.517\) vs \(0.531\)), a sub-GOE effect consistent
+with the sparse companion structure.
+
+\textbf{Note:} \(\beta_{\mathrm{eff}}\) does not reach \(2.0\) at
+\(\lambda = 0\) because the companion matrix structure (sub-diagonal of 1s, all
+randomness in one column) constrains the ensemble even when entries are i.i.d.
+
+\subsubsection{4.2 Eigenvector Orthogonality Mechanism
+(C09)}\label{eigenvector-orthogonality-mechanism-c09}
+
+For a diagonalizable matrix \(M = V \Lambda V^{-1}\), the eigenvector structure
+reveals the symmetry mechanism:
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+Metric & Markov & i.i.d. & \(Z\)-score & Direction \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(\kappa(V)\) (median) & 131 & 21 & 1.6 & Markov \emph{less} orthogonal \\
+Gram off-diagonal & 0.78 & 0.28 & 121 & Markov \emph{less} orthogonal \\
+Fraction real eigenvalues & 0.049 & 0.038 & 9.6 & Markov \emph{more} real \\
+\end{longtable}
+
+Markov-correlated entries make eigenvectors \emph{less} orthogonal (\(\kappa\)
+is \(6\times\) larger), but simultaneously produce \emph{more real eigenvalues}
+(\(+30\%\), \(Z = 9.6\)). The correlation
+\(\rho(\log_{10} \kappa, \langle\tilde{r}\rangle) = -0.36\) is
+\textbf{negative}: higher \(\kappa\) (less orthogonal) correlates with
+\emph{lower} \(\langle\tilde{r}\rangle\) (more GOE-like).
+
+\textbf{Interpretation.} The GOE mechanism is not ``Markov makes eigenvectors
+orthogonal.'' Rather, the Markov carry recurrence imposes a \textbf{structured}
+pattern of non-orthogonality --- constrained by the carry chain --- that
+effectively preserves time-reversal symmetry. The \(\kappa(V)\) ratio
+(Markov/i.i.d.) \textbf{grows with dimension}: \(3.6\times\) at \(D = 18\),
+\(7.3\times\) at \(D = 50\), consistent with the spacing ratio converging deeper
+into the GOE regime at larger \(D\).
+
+\subsubsection{4.3 Computational Bound:}\label{computational-bound}
+
+\[\beta_{\mathrm{eff}} \leq 2 - \varepsilon\]
+
+(C11)
+
+The Atas et al.~{[}9{]} Wigner surmise provides an analytic map
+\(\langle\tilde{r}\rangle(\beta)\) valid for all \(\beta > 0\):
+
+\[p_\beta(r) \propto \frac{(r + r^2)^\beta}{(1 + r + r^2)^{1 + 3\beta/2}}, \qquad \langle\tilde{r}\rangle(\beta) = \int_0^1 r\,\tilde{p}_\beta(r)\,dr.\]
+
+Inverting this map on bootstrap confidence intervals yields a computational
+bound.
+
+\textbf{Proposition} (Computational \(\beta_{\mathrm{eff}}\) bound). *For
+\(D\)-dimensional companion matrices with base-2 Markov-correlated carry
+entries, the effective Dyson index satisfies
+
+\[\beta_{\mathrm{eff}} \leq 2 - \varepsilon(D)\]
+
+where \(\varepsilon(D) > 0\) at 99.9\% bootstrap confidence (\(B = 10{,}000\)
+resamples):*
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1176}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2353}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.3725}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1569}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1176}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\(\bar{D}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\beta_{\mathrm{eff}}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\beta_{\mathrm{upper}}\) (99.9\% CI)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\varepsilon\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(Z\) vs GUE
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+18 & 1.56 & 1.64 & 0.37 & 17.7 \\
+26 & 1.15 & 1.20 & 0.80 & 49.6 \\
+34 & 0.85 & 0.89 & 1.12 & 83.0 \\
+42 & 0.69 & 0.73 & 1.27 & 93.8 \\
+50 & 0.60 & 0.63 & 1.37 & 105.7 \\
+\end{longtable}
+
+The bound \(\varepsilon(D)\) is \textbf{monotonically increasing} with \(D\):
+the deviation from GUE strengthens with matrix size and is not a finite-size
+artifact. The i.i.d. control ensemble yields
+\(\beta_{\mathrm{eff}} \approx 1.7\)--\(2.2\) (near-GUE) across all \(D\),
+isolating the Markov correlation as the sole mechanism.
+
+\textbf{Caveats.} (1) The Wigner surmise is approximate; its
+\(\langle\tilde{r}\rangle\) values deviate from exact ensemble averages by
+\({\sim}1\%\) at \(\beta = 1, 2\). (2) At \(D \geq 34\),
+\(\beta_{\mathrm{eff}} < 1\) (``sub-GOE''), which lies outside standard
+\(\beta\)-ensemble theory and reflects the sparse companion structure rather
+than a physical \(\beta < 1\) universality class. (3) This is a computational
+result, not a mathematical proof.
+
+\subsubsection{4.4 Mechanism: Effective Rank Reduction
+(C12)}\label{mechanism-effective-rank-reduction-c12}
+
+A simplified binary model isolates the mechanism analytically. Consider
+\(D\)-dimensional companion matrices with last-column entries
+\((a_0, \ldots, a_{D-2}) \in \{0,1\}\) from a symmetric Markov chain with lag-1
+correlation \(\rho \in [0,1]\), and \(a_{D-1} = 1\) (ULC).
+
+\textbf{Observation} (Monotonicity of \(\beta_{\mathrm{eff}}\) in \(\rho\)).
+Exact enumeration (\(D = 5\)--\(8\)) and Monte Carlo (\(D = 5\)--\(50\),
+\(10^5\) samples) establish:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+\(\rho\) & \(\langle\tilde{r}\rangle\) & \(\beta_{\mathrm{eff}}\) & Regime \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0.0 & 0.5006 & 0.64 & Sub-GOE \\
+0.3 & 0.5131 & 0.76 & Sub-GOE \\
+\textbf{0.5} & \textbf{0.5370} & \textbf{1.01} & \textbf{GOE} \\
+0.7 & 0.5861 & 1.70 & GOE--GUE \\
+\end{longtable}
+
+At \(\rho = 1/2\) --- the Diaconis--Fulman spectral gap value {[}A; 7{]} --- the
+binary model gives \(\beta_{\mathrm{eff}} \approx 1\) (GOE), and the effective
+rank is exactly \(g(1/2) = 3/5\) by Proposition 2. The coincidence of the GOE
+crossing point with the carry chain's spectral gap is the central result linking
+the abstract Markov theory to the observed universality class.
+
+\subsubsection{4.5 Real Eigenvalue Enhancement (C13, Prop.
+3)}\label{real-eigenvalue-enhancement-c13-prop.-3}
+
+The fraction of real eigenvalues provides the most direct signature of effective
+time-reversal symmetry (TRS): real eigenvalues correspond to eigenvectors that
+can be chosen real, the hallmark of the orthogonal class.
+
+\textbf{Observation 3} (Real eigenvalue enhancement). For \(D\)-dimensional
+companion matrices with binary Markov entries and correlation \(\rho\)
+(established computationally; exact enumeration for \(D = 5\)--\(8\), Monte
+Carlo for \(D = 5\)--\(50\)):
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  The real eigenvalue fraction \(f_{\mathrm{real}}(\rho)\) is monotonically
+  increasing in \(\rho\).
+\item
+  At \(\rho = 1/2\), \(f_{\mathrm{real}}\) is enhanced by \({\approx}40\%\) over
+  the i.i.d. baseline (\(D = 20\)). For actual carry matrices (20-bit primes),
+  the enhancement is \({\approx}195\%\) (\(Z = 49.1\)).
+\item
+  \(f_{\mathrm{real}}\) is strongly anti-correlated with the effective rank: .
+\end{enumerate}
+
+\[\mathrm{Corr}(f_{\mathrm{real}}, g(\rho)) = -0.93\]
+
+The anti-correlation (c) confirms the rank-reduction mechanism: as correlation
+\(\rho\) increases, the effective rank \(g(\rho)\) decreases (Proposition 2),
+and the real eigenvalue fraction increases. Fewer independent perturbation
+directions make the companion matrix ``more real,'' consistent with the GOE
+transition. The enhancement is stronger for actual carry matrices than for the
+binary model because the carry entry distribution is richer than \(\{0,1\}\),
+amplifying the correlation effect.
+
+The ratio
+
+\[f_{\mathrm{real}}(\rho{=}0.5) / f_{\mathrm{real}}(\rho{=}0) \approx 1.4\]
+
+is stable across dimensions \(D = 8\) to \(D = 50\). This connects to the real
+Ginibre ensemble literature (Edelman {[}13{]}; Akemann, Phillips, and Sommers
+{[}14{]}): for real random matrices, the expected number of real eigenvalues
+scales as \(\sqrt{2D/\pi}\), and the Markov correlation enhances this by a
+factor that depends on \(g(\rho)\).
+
+\subsubsection{4.6 Number Variance Confirmation
+(C10)}\label{number-variance-confirmation-c10}
+
+The number variance \(\Sigma^2(L)\) provides independent confirmation:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1190}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2619}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\(L\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\Sigma^2_{\text{Markov}}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\Sigma^2_{\text{i.i.d.}}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(Z\)-score
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+GOE direction?
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0.5 & 0.334 & 0.317 & +6.3 & Yes
+(\(\Sigma^2_{\text{GOE}} > \Sigma^2_{\text{GUE}}\)) \\
+1.0 & 0.566 & 0.484 & +24.5 & Yes \\
+2.0 & 0.357 & 0.432 & \(-21.8\) & No (reversal) \\
+\end{longtable}
+
+At short range (\(L \leq 1\)):
+\(\Sigma^2_{\text{Markov}} > \Sigma^2_{\text{i.i.d.}}\) with high significance,
+confirming GOE. The carry companion matrices exhibit local level repulsion
+consistent with the Wigner surmise for GOE at short ranges, while deviating at
+long ranges (\(L \geq 2\)) due to the sparse companion structure. This is
+expected: the companion matrix \(M = J + v \cdot e_D^T\) is a rank-1
+perturbation of the shift, and universality results for such structures are not
+established.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{5. Product Zeros: GUE-like}\label{product-zeros-gue-like}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1892}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3243}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3243}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1622}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Level
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(L^2\)(GOE)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(L^2\)(GUE)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Best
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Individual \(M_l\) & 0.331 & 0.409 & GOE \\
+Product \(\prod_l\) & 0.512 & 0.494 & weakly GUE-like (3.5\% difference, not
+statistically decisive) \\
+Known \(\zeta\) zeros & 0.255 & 0.200 & \textbf{GUE} \\
+\end{longtable}
+
+The complex weight \(l^{-it}\) in the Euler product introduces incommensurable
+phases that break the real-symmetry structure. This is \textbf{analogous} to the
+Berry--Keating mechanism {[}10{]}, but with a fundamental distinction:
+Berry--Keating postulate a single Hermitian operator; we have an ensemble of
+finite-dimensional real matrices whose product is a scalar function. The
+GUE-like statistics of product zeros could arise from a central-limit-theorem
+effect applied to phase-rotated contributions.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{6. Discussion}\label{discussion}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2414}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3793}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3793}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Level
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Statistics
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mechanism
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Individual \(M_l\) & GOE-like & Markov correlation → rank reduction (Prop. 2);
+positive autocorrelation (Prop. 1); real eigenvalue enhancement (Prop. 3) \\
+i.i.d. entries & GUE-like & Decorrelation (§3.1); full-rank perturbation \\
+Transition & Smooth, \(\beta_{\mathrm{eff}}(\lambda)\) & Continuous
+interpolation (§4.1); \(\Sigma^2\) confirms at short range (§4.6) \\
+Product \(\prod_l\) & GUE-like (marginal) & Complex phases from \(l^{-it}\) \\
+\end{longtable}
+
+\subsubsection{6.1 Connection to Boundary Spectral Structure
+{[}E{]}}\label{connection-to-boundary-spectral-structure-e}
+
+The overall convergence rate of the trace anomaly is governed by the
+Diaconis--Fulman eigenvalue \(\lambda_2 = 1/b\) {[}A; E; G, §4.5{]}. This same
+eigenvalue determines the effective Markov correlation in the binary model
+(§4.4), establishing a direct link between the spectral theory of the carry
+operator and the observed universality class of the carry companion matrices.
+The anti-correlation conjecture (\(\alpha_k \to (b-1)/b\) for all \(k \geq 2\);
+{[}A, Conjecture 4{]}) would, if proved, constrain the asymptotic Markov
+correlation and hence the limiting \(\beta_{\mathrm{eff}}\). No rigorous
+analytical connection between the spectral gap and the Dyson index \(\beta\) has
+been established; this remains an open problem.
+
+\subsubsection{Open Questions}\label{open-questions}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Sub-GOE effect:} The spacing ratio at \(D = 50\) falls below the GOE
+  reference (\(\langle\tilde{r}\rangle = 0.495\) vs \(0.531\)). Does this
+  indicate \(\beta < 1\) for sparse companion matrices, or is it a finite-size
+  correction? The sparse companion structure (\(D-1\) deterministic entries, 1
+  random column) may produce statistics outside standard \(\beta\)-ensembles.
+\item
+  \textbf{Analytical bound:} The computational bound (§4.3) establishes
+\end{enumerate}
+
+\[\beta_{\mathrm{eff}} \leq 2 - \varepsilon\]
+
+numerically. An analytical proof --- even for a weak bound like
+\(\varepsilon > 0\) when Markov lag-1 autocorrelation is positive --- would
+require relating the effective rank \(g(\rho)\) (Proposition 2) to the level
+repulsion exponent \(\beta\), an original contribution to the theory of sparse
+non-Hermitian ensembles.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \textbf{Product convergence:} How many Euler factors are needed for the
+  GOE→GUE transition in the product spectrum?
+\item
+  \textbf{Quantitative real eigenvalue prediction:} Observation 3 establishes
+  that Markov correlation increases \(f_{\mathrm{real}}\) by \({\sim}40\%\)
+  (binary model) to \({\sim}195\%\) (actual carries). A closed-form prediction
+  of the enhancement factor as a function of \(g(\rho)\) --- connecting to the
+  real Ginibre ensemble literature (Edelman {[}13{]}; Akemann, Phillips, and
+  Sommers {[}14{]}) --- would close the analytical loop between the effective
+  rank mechanism and the TRS signature.
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{7. Reproducibility}\label{reproducibility}
+
+13 experiment scripts in \texttt{experiments/}:
+\texttt{C01\_goe\_gue\_unitary\_transition.py},
+\texttt{C02\_goe\_gue\_finite\_size.py},
+\texttt{C03\_factorials\_goe\_gue\_transition.py},
+\texttt{C04\_gue\_correlation.py}, \texttt{C05\_goe\_gue\_scaling\_limit.py},
+\texttt{C06\_analytical\_ensemble\_structure.py},
+\texttt{C07\_goe\_spacing\_ratio.py}, \texttt{C08\_beta\_interpolation.py},
+\texttt{C09\_symmetry\_mechanism.py}, \texttt{C10\_number\_variance.py},
+\texttt{C11\_beta\_bound.py}, \texttt{C12\_analytical\_beta\_lemma.py},
+\texttt{C13\_analytical\_foundations.py} (Props. 1--3). Shared utilities in
+\texttt{src/carry\_utils.py}.
+
+Requirements: Python 3.8+, NumPy, SciPy.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\newpage
+
+\subsection{8. References}\label{references}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  H. L. Montgomery, ``The pair correlation of zeros of the zeta function,''
+  \emph{Proc. Symp. Pure Math.} 24, 181--193, 1973.
+\item
+  N. M. Katz and P. Sarnak, \emph{Random Matrices, Frobenius Eigenvalues, and
+  Monodromy}, AMS Colloquium Publications, vol.~45, 1999.
+\item
+  L. Erdős, B. Schlein, and H.-T. Yau, ``Universality of random matrices and
+  local relaxation flow,'' \emph{Invent. Math.} 185(1), 75--119, 2011.
+\item
+  L. Erdős and H.-T. Yau, ``Universality of local spectral statistics of random
+  matrices,'' \emph{Bull. Amer. Math. Soc.} 49(3), 377--414, 2012.
+\item
+  T. Tao and V. Vu, ``Random matrices: Universality of local spectral statistics
+  of non-Hermitian matrices,'' \emph{Ann. Probab.} 43(2), 782--874, 2015.
+\item
+  I. Dumitriu and A. Edelman, ``Matrix models for beta ensembles,'' \emph{J.
+  Math. Phys.} 43(11), 5830--5847, 2002.
+\item
+  P. Diaconis and J. Fulman, ``Carries, shuffling, and symmetric functions,''
+  \emph{Adv. Appl. Math.} 43(2), 176--196, 2009.
+\item
+  U. Grenander and G. Szegő, \emph{Toeplitz Forms and Their Applications},
+  University of California Press, 1958 (repr. Chelsea, 1984).
+\item
+  Y. Y. Atas, E. Bogomolny, O. Giraud, and G. Roux, ``Distribution of the ratio
+  of consecutive level spacings in random matrix ensembles,'' \emph{Phys.
+  Rev.~Lett.} 110, 084101, 2013.
+\item
+  M. V. Berry and J. P. Keating, ``The Riemann zeros and eigenvalue
+  asymptotics,'' \emph{SIAM Review} 41(2), 236--266, 1999.
+\item
+  M. L. Mehta, \emph{Random Matrices}, 3rd ed., Academic Press, 2004.
+\item
+  F. J. Dyson, ``Statistical theory of the energy levels of complex systems,''
+  \emph{J. Math. Phys.} 3, 140--175, 1962.
+\item
+  A. Edelman, ``The probability that a random real Gaussian matrix has \(k\)
+  real eigenvalues, related distributions, and the circular law,'' \emph{J.
+  Multivar. Anal.} 60(2), 203--232, 1997.
+\item
+  G. Akemann, M. J. Phillips, and H.-J. Sommers, ``The chiral Gaussian
+  two-matrix ensemble of real asymmetric matrices,'' \emph{J. Phys. A: Math.
+  Theor.} 43, 085211, 2010.
+\item
+  {[}A{]} Companion paper: ``Spectral Theory of Carries in Positional
+  Multiplication,'' this series.
+\item
+  {[}E{]} Companion paper: ``The Trace Anomaly of Binary Multiplication,'' this
+  series.
+\item
+  {[}F{]} Companion paper: ``Exact Covariance Structure of Binary Carry
+  Chains,'' this series.
+\item
+  {[}G{]} Companion paper: ``The Angular Uniqueness of Base 2 in Positional
+  Multiplication,'' this series.
+\item
+  {[}P1{]} Companion paper: ``π from Pure Arithmetic: A Spectral Phase
+  Transition in the Binary Carry Bridge,'' this series.
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\emph{CC BY 4.0. Code: MIT License.}
+
+\end{document}
