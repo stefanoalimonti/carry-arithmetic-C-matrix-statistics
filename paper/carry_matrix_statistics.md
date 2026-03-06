@@ -384,11 +384,11 @@ Requirements: Python 3.8+, NumPy, SciPy.
 12. F. J. Dyson, "Statistical theory of the energy levels of complex systems," *J. Math. Phys.* 3, 140–175, 1962.
 13. A. Edelman, "The probability that a random real Gaussian matrix has $k$ real eigenvalues, related distributions, and the circular law," *J. Multivar. Anal.* 60(2), 203–232, 1997.
 14. G. Akemann, M. J. Phillips, and H.-J. Sommers, "The chiral Gaussian two-matrix ensemble of real asymmetric matrices," *J. Phys. A: Math. Theor.* 43, 085211, 2010.
-15. [A] Companion paper: "Spectral Theory of Carries in Positional Multiplication," this series.
-16. [E] Companion paper: "The Trace Anomaly of Binary Multiplication," this series.
-17. [F] Companion paper: "Exact Covariance Structure of Binary Carry Chains," this series.
-18. [G] Companion paper: "The Angular Uniqueness of Base 2 in Positional Multiplication," this series.
-19. [P1] Companion paper: "π from Pure Arithmetic: A Spectral Phase Transition in the Binary Carry Bridge," this series.
+15. [A] Companion paper: "Spectral Theory of Carries in Positional Multiplication," this series. doi:10.5281/zenodo.18895593
+16. [E] Companion paper: "The Trace Anomaly of Binary Multiplication," this series. doi:10.5281/zenodo.18895604
+17. [F] Companion paper: "Exact Covariance Structure of Binary Carry Chains," this series. doi:10.5281/zenodo.18895607
+18. [G] Companion paper: "The Angular Uniqueness of Base 2 in Positional Multiplication," this series. doi:10.5281/zenodo.18895601
+19. [P1] Companion paper: "π from Pure Arithmetic: A Spectral Phase Transition in the Binary Carry Bridge," this series. doi:10.5281/zenodo.18895611
 
 ---
 
