@@ -79,7 +79,7 @@ $$\mathrm{Corr}(c_2, c_3) = \frac{1}{\sqrt{2}} \approx 0.7071.$$
 
 (c) The bulk autocorrelation is monotonically increasing with $j$.
 
-**Proof.** (a) From the carry recurrence $c_1 = 0$ and $\mathrm{conv}_1 = g_1 + h_1$, we have $c_2 = \lfloor(g_1 + h_1)/2\rfloor \in \{0,1\}$ with $P(c_2 = 0) = 3/4$, $P(c_2 = 1) = 1/4$. Hence $E[c_2] = 1/4$, $\mathrm{Var}(c_2) = 3/16$ [F, Theorem 3].
+**Proof.** (a) From the carry recurrence $c_1 = 0$ and $\mathrm{conv}_1 = g_1 + h_1$, we have $c_2 = \lfloor(g_1 + h_1)/2\rfloor \in \lbrace{}0,1\rbrace{}$ with $P(c_2 = 0) = 3/4$, $P(c_2 = 1) = 1/4$. Hence $E[c_2] = 1/4$, $\mathrm{Var}(c_2) = 3/16$ [F, Theorem 3].
 
 For $c_3$: when $c_2 = 1$ (i.e., $g_1 = h_1 = 1$), we have
 
@@ -270,7 +270,7 @@ The bound $\varepsilon(D)$ is **monotonically increasing** with $D$: the deviati
 
 ### 4.4 Mechanism: Effective Rank Reduction (C12)
 
-A simplified binary model isolates the mechanism analytically. Consider $D$-dimensional companion matrices with last-column entries $(a_0, \ldots, a_{D-2}) \in \{0,1\}$ from a symmetric Markov chain with lag-1 correlation $\rho \in [0,1]$, and $a_{D-1} = 1$ (ULC).
+A simplified binary model isolates the mechanism analytically. Consider $D$-dimensional companion matrices with last-column entries $(a_0, \ldots, a_{D-2}) \in \lbrace{}0,1\rbrace{}$ from a symmetric Markov chain with lag-1 correlation $\rho \in [0,1]$, and $a_{D-1} = 1$ (ULC).
 
 **Observation** (Monotonicity of $\beta_{\mathrm{eff}}$ in $\rho$). Exact enumeration ($D = 5$–$8$) and Monte Carlo ($D = 5$–$50$, $10^5$ samples) establish:
 
@@ -297,7 +297,7 @@ The fraction of real eigenvalues provides the most direct signature of effective
 
 $$\mathrm{Corr}(f_{\mathrm{real}}, g(\rho)) = -0.93$$
 
-The anti-correlation (c) confirms the rank-reduction mechanism: as correlation $\rho$ increases, the effective rank $g(\rho)$ decreases (Proposition 2), and the real eigenvalue fraction increases. Fewer independent perturbation directions make the companion matrix "more real," consistent with the GOE transition. The enhancement is stronger for actual carry matrices than for the binary model because the carry entry distribution is richer than $\{0,1\}$, amplifying the correlation effect.
+The anti-correlation (c) confirms the rank-reduction mechanism: as correlation $\rho$ increases, the effective rank $g(\rho)$ decreases (Proposition 2), and the real eigenvalue fraction increases. Fewer independent perturbation directions make the companion matrix "more real," consistent with the GOE transition. The enhancement is stronger for actual carry matrices than for the binary model because the carry entry distribution is richer than $\lbrace{}0,1\rbrace{}$, amplifying the correlation effect.
 
 The ratio
 
