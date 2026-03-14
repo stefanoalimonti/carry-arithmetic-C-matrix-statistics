@@ -30,15 +30,25 @@ at 99.9% bootstrap confidence.
 
 ## 1. Introduction
 
-### 1.1 Motivation
+### 1.1 A Concrete Example
 
-The spectral statistics of random matrices provide a bridge between arithmetic structure and physical universality classes. Montgomery [1] proved that Riemann zeta zeros exhibit GUE pair correlation; the Katz–Sarnak philosophy [2] extends this correspondence to families of $L$-functions. In this paper, we study whether the carry companion matrices — sparse non-Hermitian matrices arising from positional multiplication — exhibit random matrix statistics, and if so, which universality class.
+Consider the semiprime $N = 143 = 11 \times 13$. Multiplying in base 2 produces a carry sequence $c = (0, 0, 0, 0, 1, 1, 1, 1)$ [A, §1.1]. The carry polynomial $C(x) = g(x)h(x) - f(x)$ factors as $(x-2)Q(x)$, where the quotient $Q(x)$ has coefficients $q_k = -c_{k+1}$ [B]. After the standard monic normalization/indexing convention used for companion matrices, the **carry companion matrix** $M$ is a sparse matrix whose last column contains $-q_0, \ldots, -q_{D-1}$ (equivalently, the carry values $c_1, \ldots, c_D$, since $q_k = -c_{k+1}$) and whose sub-diagonal is all ones:
 
-### 1.2 RMT Context and Universality
+$$M = \begin{pmatrix} 0 & 0 & 0 & \cdots & -q_0 \\ 1 & 0 & 0 & \cdots & -q_1 \\ 0 & 1 & 0 & \cdots & -q_2 \\ \vdots & & \ddots & & \vdots \\ 0 & 0 & \cdots & 1 & -q_{D-1} \end{pmatrix}$$
+
+For a single semiprime, $M$ is deterministic. But across the ensemble of all $D$-bit semiprimes, the carry coefficients become random variables with Markov correlations (adjacent carries share input bits), making the last column a correlated random vector. The question is: **what are the spectral statistics of this random matrix ensemble?**
+
+The answer is unexpected: the Markov correlations drive a smooth transition from GUE (unitary) toward GOE (orthogonal) statistics — a universality-class change controlled by a single parameter, the Diaconis-Fulman spectral gap $\rho = 1/2$.
+
+### 1.2 Motivation
+
+The spectral statistics of random matrices provide a bridge between arithmetic structure and physical universality classes. Montgomery [1] proved that Riemann zeta zeros exhibit GUE pair correlation; the Katz-Sarnak philosophy [2] extends this correspondence to families of $L$-functions. In this paper, we study whether the carry companion matrices — sparse non-Hermitian matrices arising from positional multiplication — exhibit random matrix statistics, and if so, which universality class.
+
+### 1.3 RMT Context and Universality
 
 The spectral statistics of sparse non-Hermitian random matrices — specifically companion matrices where only one column contains random entries — remain challenging for rigorous RMT. While bulk universality has been established for broad classes of Wigner matrices (Erdős, Schlein, and Yau [3]; Erdős and Yau [4]), the companion structure falls outside these standard frameworks. Tao and Vu [5] demonstrated that certain short-range correlations do not break local universality for non-Hermitian matrices. Our results present a contrasting phenomenon for sparse companion matrices: structured Markovian correlations *do* alter the universality class, driving a smooth continuous transition — analogous to the interpolating $\beta$-ensembles of Dumitriu and Edelman [6] — from a GUE-like uncorrelated state to a GOE-like strongly correlated state. This positions the carry sequence as a naturally occurring operator driving a rank-reducing RMT transition.
 
-### 1.3 Summary of Results
+### 1.4 Summary of Results
 
 We prove three analytical propositions and establish three computational results:
 
@@ -342,7 +352,7 @@ The complex weight $l^{-it}$ in the Euler product introduces incommensurable pha
 
 ### 6.1 Connection to Boundary Spectral Structure [E]
 
-The overall convergence rate of the trace anomaly is governed by the Diaconis–Fulman eigenvalue $\lambda_2 = 1/b$ [A; E; G, §4.5]. This same eigenvalue determines the effective Markov correlation in the binary model (§4.4), establishing a direct link between the spectral theory of the carry operator and the observed universality class of the carry companion matrices. The anti-correlation conjecture ($\alpha_k \to (b-1)/b$ for all $k \geq 2$; [A, Conjecture 4]) would, if proved, constrain the asymptotic Markov correlation and hence the limiting $\beta_{\mathrm{eff}}$. No rigorous analytical connection between the spectral gap and the Dyson index $\beta$ has been established; this remains an open problem.
+The overall convergence rate of the trace anomaly is governed by the Diaconis–Fulman eigenvalue $\lambda_2 = 1/b$ [A; E; G, §4.5]. This same eigenvalue determines the effective Markov correlation in the binary model (§4.4), establishing a direct link between the spectral theory of the carry operator and the observed universality class of the carry companion matrices. The anti-correlation conjecture ($\alpha_k \to (b-1)/(2b)$ with decay rate $(b-1)/b$ for all $k \geq 2$; [A, Conjecture 4]) would, if proved, constrain the asymptotic Markov correlation and hence the limiting $\beta_{\mathrm{eff}}$. No rigorous analytical connection between the spectral gap and the Dyson index $\beta$ has been established; this remains an open problem.
 
 ### Open Questions
 

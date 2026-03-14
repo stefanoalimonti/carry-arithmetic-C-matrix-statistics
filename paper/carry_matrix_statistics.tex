@@ -131,17 +131,42 @@ eigenvalue statistics, Markov correlation, companion matrices, effective rank
 
 \subsection{1. Introduction}\label{introduction}
 
-\subsubsection{1.1 Motivation}\label{motivation}
+\subsubsection{1.1 A Concrete Example}\label{a-concrete-example}
+
+Consider the semiprime \(N = 143 = 11 \times 13\). Multiplying in base 2
+produces a carry sequence \(c = (0, 0, 0, 0, 1, 1, 1, 1)\) {[}A, §1.1{]}. The
+carry polynomial \(C(x) = g(x)h(x) - f(x)\) factors as \((x-2)Q(x)\), where the
+quotient \(Q(x)\) has coefficients \(q_k = -c_{k+1}\) {[}B{]}. After the
+standard monic normalization/indexing convention used for companion matrices,
+the \textbf{carry companion matrix} \(M\) is a sparse matrix whose last column
+contains \(-q_0, \ldots, -q_{D-1}\) (equivalently, the carry values
+\(c_1, \ldots, c_D\), since \(q_k = -c_{k+1}\)) and whose sub-diagonal is all
+ones:
+
+\[M = \begin{pmatrix} 0 & 0 & 0 & \cdots & -q_0 \\ 1 & 0 & 0 & \cdots & -q_1 \\ 0 & 1 & 0 & \cdots & -q_2 \\ \vdots & & \ddots & & \vdots \\ 0 & 0 & \cdots & 1 & -q_{D-1} \end{pmatrix}\]
+
+For a single semiprime, \(M\) is deterministic. But across the ensemble of all
+\(D\)-bit semiprimes, the carry coefficients become random variables with Markov
+correlations (adjacent carries share input bits), making the last column a
+correlated random vector. The question is: \textbf{what are the spectral
+statistics of this random matrix ensemble?}
+
+The answer is unexpected: the Markov correlations drive a smooth transition from
+GUE (unitary) toward GOE (orthogonal) statistics --- a universality-class change
+controlled by a single parameter, the Diaconis-Fulman spectral gap
+\(\rho = 1/2\).
+
+\subsubsection{1.2 Motivation}\label{motivation}
 
 The spectral statistics of random matrices provide a bridge between arithmetic
 structure and physical universality classes. Montgomery {[}1{]} proved that
-Riemann zeta zeros exhibit GUE pair correlation; the Katz--Sarnak philosophy
+Riemann zeta zeros exhibit GUE pair correlation; the Katz-Sarnak philosophy
 {[}2{]} extends this correspondence to families of \(L\)-functions. In this
 paper, we study whether the carry companion matrices --- sparse non-Hermitian
 matrices arising from positional multiplication --- exhibit random matrix
 statistics, and if so, which universality class.
 
-\subsubsection{1.2 RMT Context and
+\subsubsection{1.3 RMT Context and
 Universality}\label{rmt-context-and-universality}
 
 The spectral statistics of sparse non-Hermitian random matrices --- specifically
@@ -158,7 +183,7 @@ phenomenon for sparse companion matrices: structured Markovian correlations
 state. This positions the carry sequence as a naturally occurring operator
 driving a rank-reducing RMT transition.
 
-\subsubsection{1.3 Summary of Results}\label{summary-of-results}
+\subsubsection{1.4 Summary of Results}\label{summary-of-results}
 
 We prove three analytical propositions and establish three computational
 results:
@@ -825,11 +850,12 @@ Diaconis--Fulman eigenvalue \(\lambda_2 = 1/b\) {[}A; E; G, §4.5{]}. This same
 eigenvalue determines the effective Markov correlation in the binary model
 (§4.4), establishing a direct link between the spectral theory of the carry
 operator and the observed universality class of the carry companion matrices.
-The anti-correlation conjecture (\(\alpha_k \to (b-1)/b\) for all \(k \geq 2\);
-{[}A, Conjecture 4{]}) would, if proved, constrain the asymptotic Markov
-correlation and hence the limiting \(\beta_{\mathrm{eff}}\). No rigorous
-analytical connection between the spectral gap and the Dyson index \(\beta\) has
-been established; this remains an open problem.
+The anti-correlation conjecture (\(\alpha_k \to (b-1)/(2b)\) with decay rate
+\((b-1)/b\) for all \(k \geq 2\); {[}A, Conjecture 4{]}) would, if proved,
+constrain the asymptotic Markov correlation and hence the limiting
+\(\beta_{\mathrm{eff}}\). No rigorous analytical connection between the spectral
+gap and the Dyson index \(\beta\) has been established; this remains an open
+problem.
 
 \subsubsection{Open Questions}\label{open-questions}
 
